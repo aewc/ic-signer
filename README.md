@@ -50,4 +50,15 @@ dfx deploy --no-wallet --network ic
     Err = "Failed to call get_ecdsa_public_key Management canister has no method \'get_ecdsa_public_key\'"
   },
 )
+
+# after fix to newest version
+dfx deploy --no-wallet --network ic
+
+dfx canister --network ic call ecdsa_example sign '(vec{0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;})'
+(
+  variant {
+    Err = "Failed to call get_ecdsa_public_key This API is not enabled on this subnet"
+  },
+)
+
 ```
