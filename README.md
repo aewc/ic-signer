@@ -39,3 +39,15 @@ If all is successful, you may point your browser to the asset canister's URL and
 
 At the moment the build is against IC commit [d004accc3904e24dddb13a11d93451523e1a8a5f](https://github.com/dfinity/ic/commit/d004accc3904e24dddb13a11d93451523e1a8a5f) because that is what dfx 0.9.3 uses.
 If you want to run against newer version of IC (which has changed the ECDSA API), you will need to compile and run your own replica, and also don't forget to edit the file `src/ecdsa_example/Cargo.toml` to pin the same version.
+
+# deploy on ic
+```sh
+dfx deploy --no-wallet --network ic
+
+ dfx canister --network ic call ecdsa_example sign '(vec{0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;})'
+(
+  variant {
+    Err = "Failed to call get_ecdsa_public_key Management canister has no method \'get_ecdsa_public_key\'"
+  },
+)
+```
