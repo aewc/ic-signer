@@ -1,4 +1,6 @@
-use candid::CandidType;
+mod types;
+
+use candid::{CandidType, candid_method};
 use dfn_candid::candid_one;
 use dfn_core::{
     api::{call_with_cleanup, CanisterId},
@@ -7,6 +9,9 @@ use dfn_core::{
 use ic_ic00_types::{
     ECDSAPublicKeyArgs, ECDSAPublicKeyResponse, SignWithECDSAArgs, SignWithECDSAReply, EcdsaKeyId,
     EcdsaCurve,
+};
+use types::{
+    GetBalanceRequest, GetBalanceError, GetUtxosRequest, GetUtxosResponse, GetUtxosError, 
 };
 use libsecp256k1::{verify, Message, PublicKey, Signature};
 use serde::Serialize;
@@ -25,6 +30,7 @@ fn sign() {
     over_async(candid_one, |msg: Vec<u8>| request_signature(msg))
 }
 
+#[candid_method(update, rename = "sign")]
 async fn request_signature(msg: Vec<u8>) -> Result<Bundle, String> {
     assert!(msg.len() == 32);
     let publickey = {
@@ -88,4 +94,58 @@ async fn request_signature(msg: Vec<u8>) -> Result<Bundle, String> {
         signature,
         verified,
     })
+}
+
+
+#[export_name = "canister_update balance"]
+fn balance() {
+    over_async(candid_one, |_: ()| get_balance())
+}
+
+#[candid_method(update, rename = "balance")]
+async fn get_balance() -> Result<u64, String> {
+    let request = GetBalanceRequest {
+        address: "msUVyket8s2obTn8wDyjkHjkpK92dnoD66".to_string(),
+        min_confirmations: Some(0),
+    };
+
+    let res : Result<u64, GetBalanceError> = call_with_cleanup(
+        CanisterId::from_str("aaaaa-aa").unwrap(),
+        "bitcoin_testnet_get_balance",
+        candid_one,
+        request,
+    ).await
+    .map_err(|e| format!("{}", e.1))?;
+    Ok(res.unwrap())
+}
+
+#[export_name = "canister_update utxos"]
+fn utxos() {
+    over_async(candid_one, |_: ()| get_utxos())
+}
+
+#[candid_method(update, rename = "utxos")]
+async fn get_utxos() -> Result<GetUtxosResponse, String> {
+    let request = GetUtxosRequest {
+        address: "msUVyket8s2obTn8wDyjkHjkpK92dnoD66".to_string(),
+        min_confirmations: Some(0),
+    };
+
+    let res : Result<GetUtxosResponse, GetUtxosError> = call_with_cleanup(
+        CanisterId::from_str("aaaaa-aa").unwrap(),
+        "bitcoin_testnet_get_utxos",
+        candid_one,
+        request,
+    ).await
+    .map_err(|e| format!("{}", e.1))?;
+    Ok(res.unwrap())
+}
+
+#[cfg(any(target_arch = "wasm32", test))]
+fn main() {}
+
+#[cfg(not(any(target_arch = "wasm32", test)))]
+fn main() {
+    candid::export_service!();
+    std::print!("{}", __export_service());
 }

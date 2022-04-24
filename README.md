@@ -61,4 +61,11 @@ dfx canister --network ic call ecdsa_example sign '(vec{0;0;0;0;0;0;0;0;0;0;0;0;
   },
 )
 
+# call bitcoin test interface
+dfx canister --network ic call ecdsa_example balance     
+(
+  variant {
+    Err = "Management canister has no method \'bitcoin_testnet_get_balance\'"
+  },
+)
 ```
