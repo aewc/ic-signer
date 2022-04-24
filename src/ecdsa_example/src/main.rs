@@ -7,8 +7,7 @@ use dfn_core::{
     over_async,
 };
 use ic_ic00_types::{
-    ECDSAPublicKeyArgs, ECDSAPublicKeyResponse, SignWithECDSAArgs, SignWithECDSAReply, EcdsaKeyId,
-    EcdsaCurve,
+    GetECDSAPublicKeyArgs, GetECDSAPublicKeyResponse, SignWithECDSAArgs, SignWithECDSAReply, 
 };
 use types::{
     GetBalanceRequest, GetBalanceError, GetUtxosRequest, GetUtxosResponse, GetUtxosError, 
@@ -34,18 +33,15 @@ fn sign() {
 async fn request_signature(msg: Vec<u8>) -> Result<Bundle, String> {
     assert!(msg.len() == 32);
     let publickey = {
-        let request = ECDSAPublicKeyArgs {
+        let request = GetECDSAPublicKeyArgs {
             canister_id: None,
             derivation_path: vec![],
-            key_id: EcdsaKeyId {
-                curve: EcdsaCurve::Secp256k1,
-                name: "secp256k1".to_string(),
-            },
+            key_id: "secp256k1".to_string(),
         };
         dfn_core::api::print(format!("Sending signature request = {:?}", request));
-        let res: ECDSAPublicKeyResponse = call_with_cleanup(
+        let res: GetECDSAPublicKeyResponse = call_with_cleanup(
             CanisterId::from_str("aaaaa-aa").unwrap(),
-            "ecdsa_public_key",
+            "get_ecdsa_public_key",
             candid_one,
             request,
         )
@@ -59,10 +55,7 @@ async fn request_signature(msg: Vec<u8>) -> Result<Bundle, String> {
         let request = SignWithECDSAArgs {
             message_hash: msg.clone(),
             derivation_path: [].to_vec(),
-            key_id: EcdsaKeyId {
-                curve: EcdsaCurve::Secp256k1,
-                name: "secp256k1".to_string(),
-            },
+            key_id: "secp256k1".to_string(),
         };
         dfn_core::api::print(format!("Sending signature request = {:?}", request));
         let res: SignWithECDSAReply = call_with_cleanup(
