@@ -4,6 +4,11 @@
       "candid": "src/ecdsa_example/ecdsa_example.did",
       "package": "ecdsa_example",
       "type": "rust"
+    },
+    "ecdsa_example1": {
+      "candid": "src/ecdsa_example/ecdsa_example.did",
+      "package": "ecdsa_example",
+      "type": "rust"
     }
   },
   "defaults": {

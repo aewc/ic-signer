@@ -4,11 +4,16 @@ type Bundle = record {
   publickey : vec nat8;
   message : vec nat8;
 };
+type GetECDSAPublicKeyResponse = record {
+  public_key : vec nat8;
+  chain_code : vec nat8;
+};
 type GetUtxosResponse = record { utxos : vec Utxo; total_count : nat32 };
 type OutPoint = record { txid : vec nat8; vout : nat32 };
 type Result = variant { Ok : nat64; Err : text };
-type Result_1 = variant { Ok : Bundle; Err : text };
-type Result_2 = variant { Ok : GetUtxosResponse; Err : text };
+type Result_1 = variant { Ok : GetECDSAPublicKeyResponse; Err : text };
+type Result_2 = variant { Ok : Bundle; Err : text };
+type Result_3 = variant { Ok : GetUtxosResponse; Err : text };
 type Utxo = record {
   height : nat32;
   confirmations : nat32;
@@ -17,6 +22,7 @@ type Utxo = record {
 };
 service : {
   balance : () -> (Result);
-  sign : (vec nat8) -> (Result_1);
-  utxos : () -> (Result_2);
+  pubkey : (principal) -> (Result_1);
+  sign : (vec nat8) -> (Result_2);
+  utxos : () -> (Result_3);
 }

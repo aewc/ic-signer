@@ -1,9 +1,9 @@
 mod types;
 
-use candid::{CandidType, candid_method};
-use dfn_candid::candid_one;
+use candid::{CandidType, candid_method, Principal};
+use dfn_candid::{candid_one, candid};
 use dfn_core::{
-    api::{call_with_cleanup, CanisterId},
+    api::{call_with_cleanup, CanisterId, PrincipalId},
     over_async,
 };
 use ic_ic00_types::{
@@ -22,6 +22,39 @@ pub struct Bundle {
     pub publickey: Vec<u8>,
     pub signature: Vec<u8>,
     pub verified: bool,
+}
+
+#[derive(CandidType, Serialize, Debug)]
+pub struct CallSignature {
+    pub sender: Principal,
+    pub request_id: Vec<u8>,
+    pub content: Vec<u8>,
+    pub signed_request_status: Vec<u8>,
+}
+
+#[export_name = "canister_update pubkey"]
+fn pubkey() {
+    over_async(candid_one, |canister: PrincipalId| request_pubkey(canister))
+}
+
+#[candid_method(update, rename = "pubkey")]
+async fn request_pubkey(canister: PrincipalId) -> Result<GetECDSAPublicKeyResponse, String> {
+    let request = GetECDSAPublicKeyArgs {
+        canister_id: Some(CanisterId::new(canister).expect("error canister")),
+        derivation_path: vec![],
+        key_id: "secp256k1".to_string(),
+    };
+    dfn_core::api::print(format!("Sending signature request = {:?}", request));
+    let res: GetECDSAPublicKeyResponse = call_with_cleanup(
+        CanisterId::from_str("aaaaa-aa").unwrap(),
+        "get_ecdsa_public_key",
+        candid_one,
+        request,
+    )
+    .await
+    .map_err(|e| format!("Failed to call get_ecdsa_public_key {}", e.1))?;
+    dfn_core::api::print(format!("Got response = {:?}", res));
+    Ok(res)
 }
 
 #[export_name = "canister_update sign"]
@@ -86,6 +119,22 @@ async fn request_signature(msg: Vec<u8>) -> Result<Bundle, String> {
         publickey,
         signature,
         verified,
+    })
+}
+
+#[export_name = "canister_update sign_call"]
+fn sign_call() {
+    over_async(candid, |()| request_call_sign())
+}
+
+#[candid_method(update, rename = "sign_call")]
+async fn request_call_sign() -> Result<CallSignature, String> {
+
+    Ok(CallSignature {
+        sender: Principal::from_str("aaaaa-aa").unwrap(),
+        request_id: [].to_vec(),
+        content: [].to_vec(),
+        signed_request_status: [].to_vec()
     })
 }
 
