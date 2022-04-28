@@ -1,7 +1,7 @@
 mod types;
 
 use candid::{CandidType, candid_method, Principal};
-use dfn_candid::{candid_one, candid};
+use dfn_candid::candid_one;
 use dfn_core::{
     api::{call_with_cleanup, CanisterId, PrincipalId},
     over_async,
@@ -9,6 +9,11 @@ use dfn_core::{
 use ic_ic00_types::{
     GetECDSAPublicKeyArgs, GetECDSAPublicKeyResponse, SignWithECDSAArgs, SignWithECDSAReply, 
 };
+use sign::{
+    agent::{construct_message, update_content, replica_api::Envelope}, request_id::to_request_id,
+    blob_from_arguments,
+};
+use sha2::Digest;
 use types::{
     GetBalanceRequest, GetBalanceError, GetUtxosRequest, GetUtxosResponse, GetUtxosError, 
 };
@@ -29,7 +34,6 @@ pub struct CallSignature {
     pub sender: Principal,
     pub request_id: Vec<u8>,
     pub content: Vec<u8>,
-    pub signed_request_status: Vec<u8>,
 }
 
 #[export_name = "canister_update pubkey"]
@@ -54,6 +58,7 @@ async fn request_pubkey(canister: PrincipalId) -> Result<GetECDSAPublicKeyRespon
     .await
     .map_err(|e| format!("Failed to call get_ecdsa_public_key {}", e.1))?;
     dfn_core::api::print(format!("Got response = {:?}", res));
+    dfn_core::api::print(format!("{}", Principal::self_authenticating(&res.public_key)));
     Ok(res)
 }
 
@@ -124,17 +129,78 @@ async fn request_signature(msg: Vec<u8>) -> Result<Bundle, String> {
 
 #[export_name = "canister_update sign_call"]
 fn sign_call() {
-    over_async(candid, |()| request_call_sign())
+    over_async(candid_one, |ingress_expiry: u64| request_call(ingress_expiry))
 }
 
 #[candid_method(update, rename = "sign_call")]
-async fn request_call_sign() -> Result<CallSignature, String> {
+async fn request_call(ingress_expiry: u64) -> Result<CallSignature, String> {
+    let publickey = {
+        let request = GetECDSAPublicKeyArgs {
+            canister_id: None,
+            derivation_path: vec![],
+            key_id: "secp256k1".to_string(),
+        };
+        let res: GetECDSAPublicKeyResponse = call_with_cleanup(
+            CanisterId::from_str("aaaaa-aa").unwrap(),
+            "get_ecdsa_public_key",
+            candid_one,
+            request,
+        )
+        .await
+        .map_err(|e| format!("Failed to call get_ecdsa_public_key {}", e.1))?;
+        res.public_key
+    };
 
+    let sender = Principal::self_authenticating(&publickey);
+    let canister_id = Principal::from_text("li5ot-tyaaa-aaaah-aa5ma-cai").expect("canister id err");
+    let method_name = "whoami";
+    let args = blob_from_arguments(None, None, &None).expect("args err");
+    let request = update_content(
+        sender,
+        &canister_id,
+        &method_name,
+        &args,
+        [1,2,3,4,5,6,7,8,9,104,6,7,8].to_vec(), // nonce, need rand
+        ingress_expiry,
+    ).expect("request err");
+    dfn_core::api::print(format!("update_content result = {:?}", request));
+
+    let request_id = to_request_id(&request).expect("request id err");
+    let msg = construct_message(&request_id);
+    let mut hasher = sha2::Sha256::new();
+    hasher.update(&msg);
+
+    let request_sign = SignWithECDSAArgs {
+        message_hash: hasher.finalize().to_vec(),
+        derivation_path: [].to_vec(),
+        key_id: "secp256k1".to_string(),
+    };
+    let res: SignWithECDSAReply = call_with_cleanup(
+        CanisterId::from_str("aaaaa-aa").unwrap(),
+        "sign_with_ecdsa",
+        candid_one,
+        request_sign,
+    )
+    .await
+    .map_err(|e| format!("Failed to call sign_with_ecdsa {}", e.1))?;
+    dfn_core::api::print(format!("Got response = {:?}", res));   // res.signature Vec<u8>
+
+    let envelope = Envelope {
+        content: request,
+        sender_pubkey: Some(publickey),
+        sender_sig: Some(res.signature),
+    };
+
+    let mut serialized_bytes = Vec::new();
+    let mut serializer = serde_cbor::Serializer::new(&mut serialized_bytes);
+    serializer.self_describe().expect("ser err");
+    envelope.serialize(&mut serializer).expect("serialize err");
+    let content = serialized_bytes;
+    
     Ok(CallSignature {
-        sender: Principal::from_str("aaaaa-aa").unwrap(),
-        request_id: [].to_vec(),
-        content: [].to_vec(),
-        signed_request_status: [].to_vec()
+        sender,
+        request_id: request_id.to_vec(),
+        content: content.to_vec(),
     })
 }
 
