@@ -143,7 +143,7 @@ async fn request_call(ingress_expiry: u64, publickey: Vec<u8>) -> Result<CallSig
         &canister_id,
         &method_name,
         &args,
-        [1,2,3,4,5,6,7,8,9,104,6,7,8].to_vec(), // nonce, need rand
+        ingress_expiry.to_le_bytes().to_vec(), // nonce
         ingress_expiry,
     ).expect("request err");
     dfn_core::api::print(format!("update_content result = {:?}", request));
