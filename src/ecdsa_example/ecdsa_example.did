@@ -30,6 +30,6 @@ service : {
   balance : () -> (Result);
   pubkey : (principal) -> (Result_1);
   sign : (vec nat8) -> (Result_2);
-  sign_call : (nat64) -> (Result_3);
+  sign_call : (nat64, vec nat8) -> (Result_3);
   utxos : () -> (Result_4);
 }

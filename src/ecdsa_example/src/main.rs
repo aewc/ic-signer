@@ -1,7 +1,7 @@
 mod types;
 
 use candid::{CandidType, candid_method, Principal};
-use dfn_candid::candid_one;
+use dfn_candid::{candid_one, candid};
 use dfn_core::{
     api::{call_with_cleanup, CanisterId, PrincipalId},
     over_async,
@@ -129,28 +129,11 @@ async fn request_signature(msg: Vec<u8>) -> Result<Bundle, String> {
 
 #[export_name = "canister_update sign_call"]
 fn sign_call() {
-    over_async(candid_one, |ingress_expiry: u64| request_call(ingress_expiry))
+    over_async(candid, |(ingress_expiry, publickey): (u64, Vec<u8>)| request_call(ingress_expiry, publickey))
 }
 
 #[candid_method(update, rename = "sign_call")]
-async fn request_call(ingress_expiry: u64) -> Result<CallSignature, String> {
-    let publickey = {
-        let request = GetECDSAPublicKeyArgs {
-            canister_id: None,
-            derivation_path: vec![],
-            key_id: "secp256k1".to_string(),
-        };
-        let res: GetECDSAPublicKeyResponse = call_with_cleanup(
-            CanisterId::from_str("aaaaa-aa").unwrap(),
-            "get_ecdsa_public_key",
-            candid_one,
-            request,
-        )
-        .await
-        .map_err(|e| format!("Failed to call get_ecdsa_public_key {}", e.1))?;
-        res.public_key
-    };
-
+async fn request_call(ingress_expiry: u64, publickey: Vec<u8>) -> Result<CallSignature, String> {
     let sender = Principal::self_authenticating(&publickey);
     let canister_id = Principal::from_text("li5ot-tyaaa-aaaah-aa5ma-cai").expect("canister id err");
     let method_name = "whoami";
@@ -204,6 +187,16 @@ async fn request_call(ingress_expiry: u64) -> Result<CallSignature, String> {
     })
 }
 
+
+#[export_name = "canister_update sign_request_status"]
+fn sign_call() {
+    over_async(candid, |(ingress_expiry, request_id): (u64, Vec<u8>)| request_status(ingress_expiry, request_id))
+}
+
+#[candid_method(update, rename = "sign_call")]
+async fn request_status(ingress_expiry: u64, request_id: Vec<u8>) -> Result<CallSignature, String> {
+
+}
 
 #[export_name = "canister_update balance"]
 fn balance() {

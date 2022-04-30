@@ -46,71 +46,106 @@ dfx canister call ecdsa_example pubkey '(principal "rwlgt-iiaaa-aaaaa-aaaaa-cai"
 (
   variant {
     Ok = record {
-      public_key = blob "\03\e6]\a96\5ck\94\90\f6\952\14:\e6\c3\b0\03\1cg!T\ad\01\19\fepGIq\12\fe\e4";
-      chain_code = blob "ak\14\8c\c0v\907\f9|\0e|\17\e6\f9\1f\9e\f7\ce\d6\9f^v]\a6~\e3\c9\94\22\b0 ";
+      public_key = blob "\03\09\fc\ad_0\c9\c1\17\b0\06\ba\be\f2\00\d3E\cep\c7\cb.c\b4\86\b9h\05\a3\e2\b4\11R";
+      chain_code = blob "$\11\be\d2\aa\19\b8\beY\15\b55\d7\e4p\07\10\982I\b6\e5c\f7x\a7uch\04(q";
     }
   },
 )
 # public_key
-03e65da9365c6b9490f69532143ae6c3b0031c672154ad0119fe7047497112fee4
+0309fcad5f30c9c117b006babef200d345ce70c7cb2e63b486b96805a3e2b41152
 # chain_code
-616b148cc0769037f97c0e7c17e6f91f9ef7ced69f5e765da67ee3c99422b020
-# caller
-w733o-w2qko-xyblv-5w6ji-xnvxb-x7aga-lzfo5-7n74j-2qnp3-rgxgh-bae
+2411bed2aa19b8be5915b535d7e4700710983249b6e563f778a7756368042871
 
-# 1651117440 => Thu Apr 28 2022 03:44:00 GMT+0000
-dfx canister call ecdsa_example sign_call '(1651117440_000_000_000)'
+# generate the der_encode_public_key and principal
+cd src/temp
+cargo run 0309fcad5f30c9c117b006babef200d345ce70c7cb2e63b486b96805a3e2b41152
+    Finished dev [unoptimized + debuginfo] target(s) in 0.10s
+     Running `/Users/flyq/workspace/github-aewc/ecdsa_example/target/debug/temp 0309fcad5f30c9c117b006babef200d345ce70c7cb2e63b486b96805a3e2b41152`
+[48, 86, 48, 16, 6, 7, 42, 134, 72, 206, 61, 2, 1, 6, 5, 43, 129, 4, 0, 10, 3, 66, 0, 4, 9, 252, 173, 95, 48, 201, 193, 23, 176, 6, 186, 190, 242, 0, 211, 69, 206, 112, 199, 203, 46, 99, 180, 134, 185, 104, 5, 163, 226, 180, 17, 82, 206, 93, 154, 125, 4, 213, 237, 192, 125, 10, 176, 12, 76, 78, 102, 13, 235, 0, 167, 168, 41, 107, 204, 248, 167, 204, 193, 149, 212, 214, 148, 29]
+6e7xd-4ksnm-awqip-kmiiq-saneo-ce6hq-tjqkc-qtutj-czvs5-xr2z6-zae
+
+# der_encode_public_key
+[48, 86, 48, 16, 6, 7, 42, 134, 72, 206, 61, 2, 1, 6, 5, 43, 129, 4, 0, 10, 3, 66, 0, 4, 9, 252, 173, 95, 48, 201, 193, 23, 176, 6, 186, 190, 242, 0, 211, 69, 206, 112, 199, 203, 46, 99, 180, 134, 185, 104, 5, 163, 226, 180, 17, 82, 206, 93, 154, 125, 4, 213, 237, 192, 125, 10, 176, 12, 76, 78, 102, 13, 235, 0, 167, 168, 41, 107, 204, 248, 167, 204, 193, 149, 212, 214, 148, 29]
+# caller
+6e7xd-4ksnm-awqip-kmiiq-saneo-ce6hq-tjqkc-qtutj-czvs5-xr2z6-zae
+
+# 1651293900 => Thu Apr 30 2022 04:45:00 GMT+0000
+dfx canister call ecdsa_example sign_call '(1651293900_000_000_000, vec{48;86;48;16;6;7;42;134;72;206;61;2;1;6;5;43;129;4;0;10;3;66;0;4;9;252;173;95;48;201;193;23;176;6;186;190;242;0;211;69;206;112;199;203;46;99;180;134;185;104;5;163;226;180;17;82;206;93;154;125;4;213;237;192;125;10;176;12;76;78;102;13;235;0;167;168;41;107;204;248;167;204;193;149;212;214;148;29})'
 (
   variant {
     Ok = record {
-      request_id = blob "\95\a5^\85%K\a3c\eci*\07\0e\e3v=\9bQ5\13\ed^\a2\9e\be\a9\80\0b\9c\01\d1\7f";
-      content = blob "\d9\d9\f7\a3gcontent\a7lrequest_typedcallenonceM\01\02\03\04\05\06\07\08\09h\06\07\08ningress_expiry\1b\16\e9\f2\90M\a7\00\00fsenderX\1dPS\af\80\ae\bd\b7\92\8b\b6\b7\0d\fe\03\01y+\bb\f6\ff\89\d4\1a\fd\c4\d71\c2\02kcanister_idJ\00\00\00\00\00\e0\07X\01\01kmethod_namefwhoamicargFDIDL\00\00msender_pubkeyX!\03\e6]\a96\5ck\94\90\f6\952\14:\e6\c3\b0\03\1cg!T\ad\01\19\fepGIq\12\fe\e4jsender_sigX@\eb\92Vr\8a\e0\27e\c7(\03\87tF\f8\f2\e6\a2\85Z0fA\c2\ffHI#\a6\01\e1k8\dc\f4Y\e4f\ef|\10m\914\a1\dd\049\02\bd\0f\b6m;$-\1a\97\9d32=\9ev";
-      sender = principal "w733o-w2qko-xyblv-5w6ji-xnvxb-x7aga-lzfo5-7n74j-2qnp3-rgxgh-bae";
+      request_id = blob "\b3\e7cj!,\b5\85-\d2\ca\f9y\c3\5c@\86\81v\fb\00\f5\c5\1c\8d@\cb\86D\cd\14\9f";
+      content = blob "\d9\d9\f7\a3gcontent\a7lrequest_typedcallenonceM\01\02\03\04\05\06\07\08\09h\06\07\08ningress_expiry\1b\16\ea\93\0d\99D\f8\00fsenderX\1dRk\01h!\eab\11\09\01\a4p\89\e3\c2i\82\85\09\d2i\16k.\de:\cf\b2\02kcanister_idJ\00\00\00\00\00\e0\07X\01\01kmethod_namefwhoamicargFDIDL\00\00msender_pubkeyXX0V0\10\06\07*\86H\ce=\02\01\06\05+\81\04\00\0a\03B\00\04\09\fc\ad_0\c9\c1\17\b0\06\ba\be\f2\00\d3E\cep\c7\cb.c\b4\86\b9h\05\a3\e2\b4\11R\ce]\9a}\04\d5\ed\c0}\0a\b0\0cLNf\0d\eb\00\a7\a8)k\cc\f8\a7\cc\c1\95\d4\d6\94\1djsender_sigX@\c4\e8\87\98\d0b\12\03\aeh\09\8f\db+\eb\7f\e5\27\da@\b3\01\b1#)\d66\f3Q\0e\f7\c7\01O\8f\8c|\11\ceW\80Cx\ce\078\c4\81$\a8Y\11\d3\d1\0a\89\ecE\fd\98\96\96\04\a0";
+      sender = principal "6e7xd-4ksnm-awqip-kmiiq-saneo-ce6hq-tjqkc-qtutj-czvs5-xr2z6-zae";
     }
   },
 )
 # request id 
-95a55e85254ba363ec692a070ee3763d9b513513ed5ea29ebea9800b9c01d17f
+b3e7636a212cb5852dd2caf979c35c40868176fb00f5c51c8d40cb8644cd149f
 # content
-d9d9f7a367636f6e74656e74a76c726571756573745f747970656463616c6c656e6f6e63654d010203040506070809680607086e696e67726573735f6578706972791b16e9f2904da700006673656e646572581d5053af80aebdb7928bb6b70dfe0301792bbbf6ff89d41afdc4d731c2026b63616e69737465725f69644a0000000000e0075801016b6d6574686f645f6e616d656677686f616d6963617267464449444c00006d73656e6465725f7075626b6579582103e65da9365c6b9490f69532143ae6c3b0031c672154ad0119fe7047497112fee46a73656e6465725f7369675840eb9256728ae02765c72803877446f8f2e6a2855a306641c2ff484923a601e16b38dcf459e466ef7c106d9134a1dd043902bd0fb66d3b242d1a979d33323d9e76
+d9d9f7a367636f6e74656e74a76c726571756573745f747970656463616c6c656e6f6e63654d010203040506070809680607086e696e67726573735f6578706972791b16ea930d9944f8006673656e646572581d526b016821ea62110901a47089e3c269828509d269166b2ede3acfb2026b63616e69737465725f69644a0000000000e0075801016b6d6574686f645f6e616d656677686f616d6963617267464449444c00006d73656e6465725f7075626b657958583056301006072a8648ce3d020106052b8104000a0342000409fcad5f30c9c117b006babef200d345ce70c7cb2e63b486b96805a3e2b41152ce5d9a7d04d5edc07d0ab00c4c4e660deb00a7a8296bccf8a7ccc195d4d6941d6a73656e6465725f7369675840c4e88798d0621203ae68098fdb2beb7fe527da40b301b12329d636f3510ef7c7014f8f8c7c11ce57804378ce0738c48124a85911d3d10a89ec45fd98969604a0
 ```
 
 reconstruct the message.json
 ```json
 {
     "version":1,
-    "creation":"2022-04-28 03:39:00 UTC",
-    "expiration":"2022-04-28 03:44:00 UTC",
+    "creation":"2022-04-30 04:40:00 UTC",
+    "expiration":"2022-04-30 04:45:00 UTC",
     "network":"https://ic0.app",
     "call_type":"update",
-    "sender":"w733o-w2qko-xyblv-5w6ji-xnvxb-x7aga-lzfo5-7n74j-2qnp3-rgxgh-bae",
+    "sender":"6e7xd-4ksnm-awqip-kmiiq-saneo-ce6hq-tjqkc-qtutj-czvs5-xr2z6-zae",
     "canister_id":"li5ot-tyaaa-aaaah-aa5ma-cai",
     "method_name":"whoami",
     "arg":[68,73,68,76,0,0],
-    "request_id":"95a55e85254ba363ec692a070ee3763d9b513513ed5ea29ebea9800b9c01d17f",
-    "content":"d9d9f7a367636f6e74656e74a76c726571756573745f747970656463616c6c656e6f6e63654d010203040506070809680607086e696e67726573735f6578706972791b16e9f2904da700006673656e646572581d5053af80aebdb7928bb6b70dfe0301792bbbf6ff89d41afdc4d731c2026b63616e69737465725f69644a0000000000e0075801016b6d6574686f645f6e616d656677686f616d6963617267464449444c00006d73656e6465725f7075626b6579582103e65da9365c6b9490f69532143ae6c3b0031c672154ad0119fe7047497112fee46a73656e6465725f7369675840eb9256728ae02765c72803877446f8f2e6a2855a306641c2ff484923a601e16b38dcf459e466ef7c106d9134a1dd043902bd0fb66d3b242d1a979d33323d9e76"
+    "request_id":"b3e7636a212cb5852dd2caf979c35c40868176fb00f5c51c8d40cb8644cd149f",
+    "content":"d9d9f7a367636f6e74656e74a76c726571756573745f747970656463616c6c656e6f6e63654d010203040506070809680607086e696e67726573735f6578706972791b16ea930d9944f8006673656e646572581d526b016821ea62110901a47089e3c269828509d269166b2ede3acfb2026b63616e69737465725f69644a0000000000e0075801016b6d6574686f645f6e616d656677686f616d6963617267464449444c00006d73656e6465725f7075626b657958583056301006072a8648ce3d020106052b8104000a0342000409fcad5f30c9c117b006babef200d345ce70c7cb2e63b486b96805a3e2b41152ce5d9a7d04d5edc07d0ab00c4c4e660deb00a7a8296bccf8a7ccc195d4d6941d6a73656e6465725f7369675840c4e88798d0621203ae68098fdb2beb7fe527da40b301b12329d636f3510ef7c7014f8f8c7c11ce57804378ce0738c48124a85911d3d10a89ec45fd98969604a0"
 }
 ```
 
 ```sh
-dfx canister --network ic send message.json
+dfx canister --network ic send ./message.json 
 Will send message:
-  Creation:    2022-04-28 03:39:00 UTC
-  Expiration:  2022-04-28 03:44:00 UTC
+  Creation:    2022-04-30 04:15:00 UTC
+  Expiration:  2022-04-30 04:20:00 UTC
   Network:     https://ic0.app
   Call type:   update
-  Sender:      w733o-w2qko-xyblv-5w6ji-xnvxb-x7aga-lzfo5-7n74j-2qnp3-rgxgh-bae
+  Sender:      axzdn-57yuf-vaexo-kpymw-dvsog-7ztcw-qztxo-gvcgh-y5bwi-kowhh-kqe
   Canister id: li5ot-tyaaa-aaaah-aa5ma-cai
   Method name: whoami
   Arg:         [68, 73, 68, 76, 0, 0]
 
 Okay? [y/N]
 y
-Error: The replica returned an HTTP Error: Http Error: status 403 Forbidden, content type "application/cbor", content: Failed to authenticate request 0x95a55e85254ba363ec692a070ee3763d9b513513ed5ea29ebea9800b9c01d17f due to: Invalid signature: Invalid public key: Malformed Placeholder public key: 03e65da9365c6b9490f69532143ae6c3b0031c672154ad0119fe7047497112fee4, error: Error in DER encoding: Length field too large for object type: 102
+Error: The replica returned an HTTP Error: Http Error: status 403 Forbidden, content type "application/cbor", content: Failed to authenticate request 0xf2f3e8309e88d73716a79d067a2a757072f406d8da8c840960fc34e552c5994c due to: Invalid signature: Invalid public key: Malformed EcdsaSecp256k1 public key: 3036301006072a8648ce3d020106052b8104000a0322000309fcad5f30c9c117b006babef200d345ce70c7cb2e63b486b96805a3e2b41152, error: non-canonical encoding
 
 # error happened. as info said, the public key error.
 
 ```
+
+finally successful:
+```sh
+dfx canister --network ic send ./message.json 
+
+Will send message:
+  Creation:    2022-04-30 04:40:00 UTC
+  Expiration:  2022-04-30 04:45:00 UTC
+  Network:     https://ic0.app
+  Call type:   update
+  Sender:      6e7xd-4ksnm-awqip-kmiiq-saneo-ce6hq-tjqkc-qtutj-czvs5-xr2z6-zae
+  Canister id: li5ot-tyaaa-aaaah-aa5ma-cai
+  Method name: whoami
+  Arg:         [68, 73, 68, 76, 0, 0]
+
+Okay? [y/N]
+y
+To check the status of this update call, append `--status` to current command.
+e.g. `dfx canister send message.json --status`
+Alternatively, if you have the correct identity on this machine, using `dfx canister request-status` with following arguments.
+Request ID: 0xb3e7636a212cb5852dd2caf979c35c40868176fb00f5c51c8d40cb8644cd149f
+Canister ID: li5ot-tyaaa-aaaah-aa5ma-cai
+```
+
 
 ## others 
 
@@ -134,10 +169,12 @@ error: Socket2 doesn't support the compile target
     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ```
 
-can't use std::time
-```
+can't use std::time in wasm
+```sh
 [Canister rwlgt-iiaaa-aaaaa-aaaaa-cai] Panicked at 'time not implemented on this platform', library/std/src/sys/wasm/../unsupported/time.rs:39:9
 ```
+
+can't use k256 in wasm, for the dependencies of k256 require rand_core, and the rand_core used the getrandom, and not used the ["js"] features, and only ["js"] features support wasm.
 
 ## reference
 
