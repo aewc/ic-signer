@@ -13,7 +13,7 @@ ic-types = { git = "https://github.com/dfinity/ic", rev = "d004accc3904e24dddb13
 ic-ic00-types = { git = "https://github.com/dfinity/ic", rev = "d004accc3904e24dddb13a11d93451523e1a8a5f" }
 dfn_candid = { git = "https://github.com/dfinity/ic", rev = "d004accc3904e24dddb13a11d93451523e1a8a5f" }
 dfn_core = { git = "https://github.com/dfinity/ic", rev = "d004accc3904e24dddb13a11d93451523e1a8a5f" }
-sign = { path = "../../../sign" }
+ic-agent = { git = "https://github.com/infinity-swap/agent-rs", branch = "wasm" }
 serde_cbor = "0.11.2"
 hex = "0.4.0"
 sha2 = "0.10"

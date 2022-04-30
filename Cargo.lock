@@ -586,13 +586,13 @@ dependencies = [
  "dfn_candid",
  "dfn_core",
  "hex",
+ "ic-agent",
  "ic-ic00-types",
  "ic-types 0.8.0",
  "libsecp256k1 0.5.0",
  "serde",
  "serde_cbor",
  "sha2 0.10.2",
- "sign",
 ]
 
 [[package]]
@@ -922,6 +922,23 @@ dependencies = [
  "bytes",
  "fnv",
  "itoa",
+]
+
+[[package]]
+name = "ic-agent"
+version = "0.1.0"
+source = "git+https://github.com/infinity-swap/agent-rs?branch=wasm#7f663bea7d57e7d6ac4d1a6a8183525364c92f37"
+dependencies = [
+ "anyhow",
+ "candid",
+ "hex",
+ "ic-types 0.3.0",
+ "leb128",
+ "serde",
+ "serde_bytes",
+ "serde_cbor",
+ "sha2 0.10.2",
+ "thiserror",
 ]
 
 [[package]]
@@ -2200,22 +2217,6 @@ dependencies = [
  "cfg-if 1.0.0",
  "cpufeatures",
  "digest 0.10.3",
-]
-
-[[package]]
-name = "sign"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "candid",
- "hex",
- "ic-types 0.3.0",
- "leb128",
- "serde",
- "serde_bytes",
- "serde_cbor",
- "sha2 0.10.2",
- "thiserror",
 ]
 
 [[package]]

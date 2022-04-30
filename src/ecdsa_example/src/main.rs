@@ -9,7 +9,7 @@ use dfn_core::{
 use ic_ic00_types::{
     GetECDSAPublicKeyArgs, GetECDSAPublicKeyResponse, SignWithECDSAArgs, SignWithECDSAReply, 
 };
-use sign::{
+use ic_agent::{
     agent::{construct_message, update_content, replica_api::Envelope}, request_id::to_request_id,
     blob_from_arguments,
 };
