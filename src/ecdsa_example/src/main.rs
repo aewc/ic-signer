@@ -189,13 +189,13 @@ async fn request_call(ingress_expiry: u64, publickey: Vec<u8>) -> Result<CallSig
 
 
 #[export_name = "canister_update sign_request_status"]
-fn sign_call() {
+fn sign_request_status() {
     over_async(candid, |(ingress_expiry, request_id): (u64, Vec<u8>)| request_status(ingress_expiry, request_id))
 }
 
-#[candid_method(update, rename = "sign_call")]
+#[candid_method(update, rename = "sign_request_status")]
 async fn request_status(ingress_expiry: u64, request_id: Vec<u8>) -> Result<CallSignature, String> {
-
+    Err("".to_string())
 }
 
 #[export_name = "canister_update balance"]
