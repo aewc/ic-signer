@@ -1,4 +1,6 @@
 [workspace]
 members = [
     "src/ecdsa_example",
+    "src/der",
+    "src/request"
 ]

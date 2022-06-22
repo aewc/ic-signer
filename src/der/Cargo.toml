@@ -1,0 +1,13 @@
+[package]
+name = "der"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+k256 = "0.10"
+pkcs8 = { version = "0.8", features = ["std"] }
+candid = "0.7.10"
+hex = "0.4.3"
+libsecp256k1 = "0.7.0"

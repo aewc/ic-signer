@@ -1,7 +1,24 @@
 //! Types used to support the candid API.
-use candid::CandidType;
-use serde::Deserialize;
+use candid::{CandidType, Principal};
+use serde::{Deserialize, Serialize};
 pub type Satoshi = u64;
+
+#[derive(CandidType, Serialize, Debug)]
+pub struct Bundle {
+    pub message: Vec<u8>,
+    pub publickey: Vec<u8>,
+    pub signature: Vec<u8>,
+    pub verified: bool,
+}
+
+#[derive(CandidType, Serialize, Debug)]
+pub struct CallSignature {
+    pub sender: Principal,
+    pub request_id: Vec<u8>,
+    pub content: Vec<u8>,
+    pub start: String,
+    pub end: String,
+}
 
 /// A reference to a transaction output.
 #[derive(CandidType, Clone, Debug, Deserialize, PartialEq, Eq, Hash)]

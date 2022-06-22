@@ -4,6 +4,10 @@
       "candid": "src/ecdsa_example/ecdsa_example.did",
       "package": "ecdsa_example",
       "type": "rust"
+    },
+    "whoami": {
+      "main": "src/whoami/main.mo",
+      "type": "motoko"
     }
   },
   "defaults": {

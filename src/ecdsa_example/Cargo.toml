@@ -8,8 +8,14 @@ edition = "2018"
 serde = "1"
 candid = "0.7.10"
 libsecp256k1 = "0.5.0"
+serde_cbor = "0.11.2"
+hex = "0.4.0"
+sha2 = "0.10"
+ic-cdk = "0.5.0"
+chrono = "0.4.19"
 
-ic-types = { git = "https://github.com/dfinity/ic" }
-ic-ic00-types = { git = "https://github.com/dfinity/ic" }
-dfn_candid = { git = "https://github.com/dfinity/ic" }
-dfn_core = { git = "https://github.com/dfinity/ic" }
+ic-types = { git = "https://github.com/dfinity/ic", rev = "d004accc3904e24dddb13a11d93451523e1a8a5f" }
+ic-ic00-types = { git = "https://github.com/dfinity/ic", rev = "d004accc3904e24dddb13a11d93451523e1a8a5f" }
+dfn_candid = { git = "https://github.com/dfinity/ic", rev = "d004accc3904e24dddb13a11d93451523e1a8a5f" }
+dfn_core = { git = "https://github.com/dfinity/ic", rev = "d004accc3904e24dddb13a11d93451523e1a8a5f" }
+ic-agent = { git = "https://github.com/infinity-swap/agent-rs", branch = "wasm" }
